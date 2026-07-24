@@ -53,10 +53,11 @@ export const metadata: Metadata = {
       "Inițiativă civică pentru un fotbal curat la Iași. Înscrie-te ca membru fondator al comunității.",
     images: [
       {
-        url: "/videos/hero/poster.jpeg",
-        width: 1920,
-        height: 1080,
-        alt: "For Iași — vedere aeriană a Iașiului",
+        url: "/opengraph-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "O singură voce pentru un fotbal curat.",
+        type: "image/jpeg",
       },
     ],
   },
@@ -65,7 +66,12 @@ export const metadata: Metadata = {
     title: "For Iași — O singură voce pentru un fotbal curat",
     description:
       "Inițiativă civică pentru un fotbal curat la Iași. Înscrie-te ca membru fondator.",
-    images: ["/videos/hero/poster.jpeg"],
+    images: [
+      {
+        url: "/opengraph-image.jpg",
+        alt: "O singură voce pentru un fotbal curat.",
+      },
+    ],
   },
   robots: {
     index: true,
