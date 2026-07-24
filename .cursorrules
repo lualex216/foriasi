@@ -1,0 +1,19 @@
+# Regulile Proiectului For Iași (Next.js + Tailwind + shadcn/ui)
+
+## Tech Stack
+- Framework: Next.js 14+ (App Router, TypeScript, src/ directory)
+- Styling: Tailwind CSS
+- UI Components: shadcn/ui, Radix UI, 21st.dev, shadcnspace
+- Icons: @phosphor-icons/react
+
+## Directoare și Structură
+- Paginile publice sunt în `src/app/`
+- Componentele reutilizabile UI sunt în `src/components/ui/`
+- Componentele specifice paginii (Hero, Misiune, Etape, Footer) sunt în `src/components/sections/`
+- Fișierele de stil/utilitare sunt în `src/lib/utils.ts`
+
+## Reguli de Cod
+1. Folosește TypeScript strict. Fără `any`.
+2. Folosește `use client` DOAR pe componentele interactive (ex: acordeon, formulare, carusel). Menține componentele ca Server Components unde este posibil.
+3. Respectă stilul shadcn/ui și Tailwind CSS (clasă `cn()` pentru îmbinarea claselor).
+4. Limba utilizată în UI și copywriting este Româna.
