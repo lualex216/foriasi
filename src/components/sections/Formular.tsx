@@ -223,7 +223,7 @@ export function Formular() {
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 noValidate
-                className="overflow-hidden rounded-lg border border-border bg-card shadow-xs"
+                className="overflow-hidden rounded-lg border border-border bg-blue-950/30 shadow-xs"
               >
                 <div className="flex items-center border-b border-border px-6 py-4">
                   <h2

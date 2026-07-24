@@ -119,7 +119,7 @@ export function Fondatori() {
                   as="li"
                   variant="card-slide"
                   delay={0.1 + i * 0.1}
-                  className="flex flex-col justify-between gap-8 rounded-lg bg-muted p-8"
+                  className="flex flex-col justify-between gap-8 rounded-lg bg-blue-950/30 p-8"
                 >
                   <Icon
                     size={32}
