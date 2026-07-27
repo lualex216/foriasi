@@ -70,7 +70,7 @@ export function Fondatori() {
             </p>
             <Link
               href="#formular"
-              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-border bg-primary px-5 text-sm font-medium text-primary-foreground shadow-lg transition-colors hover:bg-primary/90"
+              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-border bg-primary px-5 text-sm font-medium text-primary-foreground shadow-lg transition-[background-color,transform] duration-150 ease-out hover:bg-primary/90 active:scale-[0.98]"
             >
               Completează formularul
               <CaretDown size={16} weight="regular" />

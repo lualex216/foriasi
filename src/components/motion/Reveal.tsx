@@ -5,51 +5,31 @@ import type { ReactNode } from "react";
 
 type Variant = "title" | "card-slide" | "card-scale";
 
+const EASE_OUT_QUART = [0.22, 1, 0.36, 1] as const;
+
 const VARIANTS: Record<Variant, Variants> = {
   title: {
-    hidden: {
-      opacity: 0,
-      y: 24,
-      filter: "blur(12px)",
-    },
+    hidden: { opacity: 0, y: 16 },
     visible: {
       opacity: 1,
       y: 0,
-      filter: "blur(0px)",
-      transition: {
-        duration: 0.9,
-        ease: [0.22, 1, 0.36, 1],
-      },
+      transition: { duration: 0.5, ease: EASE_OUT_QUART },
     },
   },
   "card-slide": {
-    hidden: {
-      opacity: 0,
-      y: 48,
-    },
+    hidden: { opacity: 0, y: 32 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.7,
-        ease: [0.22, 1, 0.36, 1],
-      },
+      transition: { duration: 0.4, ease: EASE_OUT_QUART },
     },
   },
   "card-scale": {
-    hidden: {
-      opacity: 0,
-      scale: 0.9,
-      filter: "blur(8px)",
-    },
+    hidden: { opacity: 0, scale: 0.95 },
     visible: {
       opacity: 1,
       scale: 1,
-      filter: "blur(0px)",
-      transition: {
-        duration: 0.7,
-        ease: [0.22, 1, 0.36, 1],
-      },
+      transition: { duration: 0.4, ease: EASE_OUT_QUART },
     },
   },
 };
@@ -61,6 +41,7 @@ type RevealProps = {
   delay?: number;
   as?: As;
   hover?: boolean;
+  immediate?: boolean;
   className?: string;
   children: ReactNode;
 };
@@ -70,18 +51,30 @@ export function Reveal({
   delay = 0,
   as = "div",
   hover = false,
+  immediate = false,
   className,
   children,
 }: RevealProps) {
   const variants = VARIANTS[variant];
   const Component = motion[as] as typeof motion.div;
 
+  const triggerProps = immediate
+    ? { animate: "visible" as const }
+    : {
+        whileInView: "visible" as const,
+        viewport: {
+          once: true,
+          amount: 0.2,
+          margin: "0px 0px -80px 0px",
+        },
+      };
+
   return (
     <Component
       className={className}
       variants={variants}
       initial="hidden"
-      whileInView="visible"
+      {...triggerProps}
       whileHover={
         hover
           ? {
@@ -90,7 +83,6 @@ export function Reveal({
             }
           : undefined
       }
-      viewport={{ once: true, amount: 0.2, margin: "0px 0px -80px 0px" }}
       transition={{ delay }}
     >
       {children}

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { AnimatePresence, motion } from "motion/react";
 import {
   CaretDown,
   CheckCircle,
@@ -198,17 +199,33 @@ export function Formular() {
     >
       <div className="mx-auto flex w-full max-w-[1440px] justify-center px-5 py-16 md:px-8 md:py-20 lg:px-16">
         <div className="w-full max-w-[760px]">
+          <AnimatePresence mode="wait" initial={false}>
           {submitted ? (
-            <div
+            <motion.div
+              key="success"
               role="status"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col items-center gap-4 rounded-lg border border-border bg-card p-10 text-center shadow-xs"
             >
-              <CheckCircle
-                size={48}
-                weight="fill"
-                className="text-brand-blue"
-                aria-hidden
-              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.35,
+                  delay: 0.1,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <CheckCircle
+                  size={48}
+                  weight="fill"
+                  className="text-brand-blue"
+                  aria-hidden
+                />
+              </motion.div>
               <h2 className="font-heading text-2xl font-semibold text-foreground">
                 Bine ai venit în comunitatea For Iași
               </h2>
@@ -217,8 +234,15 @@ export function Formular() {
                 când asociația este înființată și se deschide etapa de
                 organizare.
               </p>
-            </div>
+            </motion.div>
           ) : (
+            <motion.div
+              key="form"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            >
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -472,7 +496,7 @@ export function Formular() {
                   <a
                     href="/statut-for-iasi.pdf"
                     download
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-card px-6 text-base font-medium text-foreground shadow-xs transition-colors hover:bg-muted/40"
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-card px-6 text-base font-medium text-foreground shadow-xs transition-[background-color,transform] duration-150 ease-out hover:bg-muted/40 active:scale-[0.98]"
                   >
                     <DownloadSimple size={18} weight="regular" aria-hidden />
                     Statut &ldquo;ForIași&rdquo;
@@ -489,7 +513,9 @@ export function Formular() {
                 </div>
               </form>
             </Form>
+            </motion.div>
           )}
+          </AnimatePresence>
         </div>
       </div>
     </section>

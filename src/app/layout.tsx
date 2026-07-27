@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Barlow_Condensed, Instrument_Serif, Geist_Mono } from "next/font/google";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -97,7 +98,7 @@ export default function RootLayout({
       className={`${inter.variable} ${barlowCondensed.variable} ${instrumentSerif.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );

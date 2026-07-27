@@ -49,6 +49,7 @@ export function StickyNav() {
   return (
     <nav
       aria-label="Navigare fixă"
+      data-glass
       className={cn(
         "fixed left-1/2 top-4 z-40 hidden -translate-x-1/2 rounded-full border border-white/10 bg-muted/30 p-0.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.24)] backdrop-blur-xl backdrop-saturate-150 transition-[opacity,transform] duration-300 ease-out md:block",
         visible

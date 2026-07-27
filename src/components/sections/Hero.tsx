@@ -63,6 +63,7 @@ export function Hero() {
 
         <nav
           aria-label="Navigare principală"
+          data-glass
           className="col-start-2 hidden items-center gap-0.5 rounded-full border border-white/10 bg-muted/30 p-0.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.24)] backdrop-blur-xl backdrop-saturate-150 md:flex"
         >
           {NAV_ITEMS.map((item) => (
@@ -85,7 +86,7 @@ export function Hero() {
         <Link
           href="#formular"
           aria-label="Devino membru"
-          className="col-start-3 hidden size-10 place-items-center justify-self-end rounded-full bg-blue-500 text-white shadow-xs transition-opacity hover:opacity-90 md:grid"
+          className="col-start-3 hidden size-10 place-items-center justify-self-end rounded-full bg-blue-500 text-white shadow-xs transition-[opacity,transform] duration-150 ease-out hover:opacity-90 active:scale-[0.98] md:grid"
         >
           <PencilSimpleLine size={18} weight="regular" />
         </Link>
@@ -94,14 +95,25 @@ export function Hero() {
       <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 flex-col items-center justify-center gap-10 px-5 py-16 md:px-8 md:py-12 lg:px-20">
         <div className="flex w-full flex-col items-center gap-16 px-4 lg:px-16">
           <div className="flex w-full max-w-[936px] flex-col items-center gap-6 text-center">
-            <Reveal as="h1" variant="title" delay={0.1} className="font-heading text-4xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-[72px] lg:leading-[72px] lg:tracking-[-1.5px]">
+            <Reveal
+              as="h1"
+              variant="title"
+              immediate
+              className="font-heading text-4xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-[72px] lg:leading-[72px] lg:tracking-[-1.5px]"
+            >
               Rezervă-ți locul de{" "}
               <span className="font-serif font-normal italic tracking-tight">
                 membru fondator
               </span>{" "}
               pentru un fotbal curat în Iași.
             </Reveal>
-            <Reveal as="p" variant="title" delay={0.35} className="max-w-[760px] text-base leading-6 text-muted-foreground">
+            <Reveal
+              as="p"
+              variant="title"
+              immediate
+              delay={0.15}
+              className="max-w-[760px] text-base leading-6 text-muted-foreground"
+            >
               A venit timpul ca suporterii ieșeni să se adune în jurul valorilor
               reale: transparență, integritate și o construcție de la bază.
               Înscrie-te pe listă și fii printre primii care pun temelia noii
@@ -109,15 +121,13 @@ export function Hero() {
             </Reveal>
           </div>
 
-          <Reveal variant="title" delay={0.55}>
-            <Link
-              href="#misiune"
-              className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs transition-opacity hover:opacity-90"
-            >
-              Află mai multe
-              <CaretDown size={16} weight="regular" />
-            </Link>
-          </Reveal>
+          <Link
+            href="#misiune"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs transition-[opacity,transform] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
+          >
+            Află mai multe
+            <CaretDown size={16} weight="regular" />
+          </Link>
         </div>
       </div>
     </section>

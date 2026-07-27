@@ -34,7 +34,7 @@ export function BackToTop() {
       onClick={scrollToTop}
       aria-label="Înapoi sus"
       className={cn(
-        "fixed bottom-6 right-6 z-40 grid size-12 place-items-center rounded-full border border-border bg-primary text-primary-foreground shadow-lg transition-all duration-300 ease-out md:bottom-8 md:right-8 md:size-14",
+        "fixed bottom-6 right-6 z-40 grid size-12 place-items-center rounded-full border border-border bg-primary text-primary-foreground shadow-lg transition-[opacity,transform] duration-200 ease-out md:bottom-8 md:right-8 md:size-14",
         "hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
         visible
           ? "translate-y-0 opacity-100"
