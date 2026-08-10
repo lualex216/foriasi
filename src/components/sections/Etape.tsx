@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import {
-  RocketLaunch,
+  Envelope,
   UserCirclePlus,
   UsersThree,
 } from "@phosphor-icons/react/dist/ssr";
@@ -20,33 +20,33 @@ const STEPS: Step[] = [
     icon: UserCirclePlus,
     title: "Te înscrii în waiting-list",
     description:
-      "Completezi formularul simplu de pe site și îți rezervi gratuit locul în registrul Membrilor Fondatori ai comunității noastre.",
+      "Completezi în mai puțin de un minut formularul de pe site și îți exprimi dorința de a face parte din prima asociație independentă a suporterilor ieșeni.",
     bullets: [
       "Înscriere 100% gratuită",
       "Fără nicio obligație financiară",
-      "Acces prioritar la lansare",
+      "Rezervare loc de Membru Fondator",
     ],
   },
   {
     icon: UsersThree,
-    title: "Validăm forța comunității",
+    title: "Validăm înscrierile",
     description:
-      "Strângem mii de suporteri, foste legende și părinți pe o listă unică, demonstrând că Iașul își dorește un altfel de model.",
+      "Echipa noastră centralizează datele și pregătește lista inițială a susținătorilor, demonstrând masa critică necesară pentru înființarea oficială.",
     bullets: [
-      "Creăm masa critică de suporteri",
-      "Construim o voce unică în oraș",
-      "Demonstrăm susținerea comunitară",
+      "Preluare și verificare date",
+      "Construirea masei critice",
+      "Confirmarea comunității unite",
     ],
   },
   {
-    icon: RocketLaunch,
-    title: "Lansare și organizare",
+    icon: Envelope,
+    title: "Primești pe e-mail detaliile",
     description:
-      "Ești notificat când platforma devine activă pentru a participa la alegerea structurii de reprezentare și la stabilirea direcției comune.",
+      "Îți trimitem pe e-mail invitația oficială, locația, data și toți pașii necesari pentru a participa la prima Adunare Generală de constituire.",
     bullets: [
-      "Decizii luate prin vot democratic",
-      "Transparență totală",
-      "Membru activ cu drept de vot",
+      "Invitație la Adunarea Generală",
+      "Ghid cu următorii pași",
+      "Participare la momentul fondării",
     ],
   },
 ];
@@ -111,7 +111,7 @@ export function Etape() {
             id="etape-title"
             className="font-heading text-3xl font-semibold leading-tight tracking-tight text-foreground md:text-4xl md:leading-10 md:tracking-[-1px]"
           >
-            Drumul de la susținător la o voce comună
+            Drumul de la susținător la membru fondator
           </h2>
         </Reveal>
 

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Barlow_Condensed, Instrument_Serif, Geist_Mono } from "next/font/google";
+import { Sora, Barlow_Condensed, Instrument_Serif, Geist_Mono } from "next/font/google";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const sora = Sora({
+  variable: "--font-sora",
   subsets: ["latin", "latin-ext"],
 });
 
@@ -95,7 +95,7 @@ export default function RootLayout({
   return (
     <html
       lang="ro"
-      className={`${inter.variable} ${barlowCondensed.variable} ${instrumentSerif.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${sora.variable} ${barlowCondensed.variable} ${instrumentSerif.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <MotionProvider>{children}</MotionProvider>

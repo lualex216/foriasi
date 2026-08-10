@@ -20,22 +20,22 @@ const BENEFITS: Benefit[] = [
   {
     icon: Scroll,
     description:
-      "Numele tău va fi înscris în registrul inițial al comunității de suporteri care au pornit această mișcare.",
+      "Numele tău va fi înscris în registrul inițial al comunității de suporteri care pun bazele acestei mișcări în Iași.",
   },
   {
     icon: BellRinging,
     description:
-      "Vei fi primul notificat în momentul în care asociația va fi înființată și se va deschide etapa de organizare/cotizații.",
+      "Vei primi direct pe e-mail toate detaliile despre data, locația și ordinea de zi pentru prima Adunare Generală.",
   },
   {
     icon: ChatTeardropText,
     description:
-      "Vei primi pe email chestionare și sondaje prin care poți contribui direct la conturarea regulilor și principiilor noastre.",
+      "Îți trimitem pe e-mail ghidul cu pașii pe care trebuie să îi urmezi pentru a confirma calitatea de membru.",
   },
   {
     icon: Megaphone,
     description:
-      "Vei fi informat în premieră despre pașii pe care îi face comunitatea noastră pentru unificarea tuturor energiilor din oraș.",
+      "Vei fi informat în premieră despre toate demersurile organizatorice pentru unificarea suporterilor.",
   },
 ];
 
@@ -63,10 +63,9 @@ export function Fondatori() {
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <p className="max-w-[720px] text-base leading-6 text-muted-foreground">
               Înscrierea pe listă este 100% gratuită și nu implică nicio
-              obligație financiară imediată. Este un act de adeziune civică și
-              morală care îți garantează: statutul de membru fondator, acces
-              prioritar, o voce în consultările inițiale și transparență de la
-              prima zi.
+              obligație financiară. Este primul pas prin care îți exprimi
+              susținerea pentru fotbalul ieșean și îți rezervi locul la prima
+              Adunare Generală de constituire a asociației.
             </p>
             <Link
               href="#formular"
