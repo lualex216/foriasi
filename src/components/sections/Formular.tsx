@@ -54,6 +54,7 @@ const COUNTRIES: Country[] = [
 const ROLES = [
   { id: "fost-sportiv", label: "Fost sportiv" },
   { id: "iubitor-sport", label: "Iubitor de sport" },
+  { id: "jurnalist", label: "Jurnalist" },
   { id: "om-afaceri", label: "Om de afaceri" },
   { id: "parinte-junior", label: "Părinte junior" },
   { id: "persoana-publica", label: "Persoană publică" },
@@ -340,7 +341,7 @@ export function Formular() {
                               >
                                 <PopoverTrigger
                                   aria-label="Selectează prefixul țării"
-                                  className="absolute left-1 top-1/2 z-10 flex -translate-y-1/2 items-center gap-1 rounded-md px-1.5 py-1 text-sm text-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/50"
+                                  className="absolute left-1 top-1/2 z-10 flex -translate-y-1/2 items-center gap-1 rounded-md px-1.5 py-1 text-sm text-primary-foreground outline-none hover:bg-primary-foreground/10 focus-visible:ring-2 focus-visible:ring-brand-blue-50"
                                 >
                                   <Flag code={country.code} />
                                   <span className="tabular-nums">
