@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import {
   CaretDown,
   CheckCircle,
   DownloadSimple,
+  MagnifyingGlass,
 } from "@phosphor-icons/react/dist/ssr";
 
 import { Button } from "@/components/ui/button";
@@ -29,27 +30,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import {
+  COUNTRIES,
+  type Country,
+  flagEmoji,
+  normalizeForSearch,
+} from "@/lib/countries";
 
-type CountryCode = "RO" | "MD" | "GB" | "DE" | "FR" | "IT" | "ES" | "US";
-
-type Country = {
-  code: CountryCode;
-  dial: string;
-  name: string;
-};
-
-const COUNTRIES: Country[] = [
-  { code: "RO", dial: "+40", name: "România" },
-  { code: "MD", dial: "+373", name: "Republica Moldova" },
-  { code: "GB", dial: "+44", name: "Marea Britanie" },
-  { code: "DE", dial: "+49", name: "Germania" },
-  { code: "FR", dial: "+33", name: "Franța" },
-  { code: "IT", dial: "+39", name: "Italia" },
-  { code: "ES", dial: "+34", name: "Spania" },
-  { code: "US", dial: "+1", name: "Statele Unite" },
-];
+const DEFAULT_COUNTRY =
+  COUNTRIES.find((c) => c.code === "RO") ?? COUNTRIES[0];
 
 const ROLES = [
   { id: "fost-sportiv", label: "Fost sportiv" },
@@ -58,7 +50,6 @@ const ROLES = [
   { id: "om-afaceri", label: "Om de afaceri" },
   { id: "parinte-junior", label: "Părinte junior" },
   { id: "persoana-publica", label: "Persoană publică" },
-  { id: "politician", label: "Politician" },
   { id: "suporter-activ", label: "Suporter activ" },
 ] as const;
 
@@ -76,6 +67,15 @@ const formSchema = z.object({
       /^[0-9\s-]{6,15}$/,
       "Introdu doar cifrele numărului (ex: 755 123 456)",
     ),
+  livesInIasi: z.enum(["da", "nu"], {
+    error: "Selectează o opțiune",
+  }),
+  country: z.string().min(2, "Selectează o țară"),
+  city: z
+    .string()
+    .trim()
+    .min(1, "Introdu un oraș")
+    .max(80, "Numele orașului e prea lung"),
   roles: z.array(z.string()),
   termsAccepted: z.literal(true, {
     error: "Trebuie să accepți termenii pentru a te înscrie",
@@ -84,87 +84,34 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-function Flag({ code }: { code: CountryCode }) {
+function Flag({ code }: { code: string }) {
   return (
     <span
       aria-hidden
-      className="inline-flex h-3 w-[18px] shrink-0 items-center justify-center overflow-hidden rounded-[2px] ring-1 ring-inset ring-border/60"
+      className="inline-block shrink-0 text-base leading-none"
     >
-      {FLAGS[code]}
+      {flagEmoji(code)}
     </span>
   );
 }
 
-const FLAGS: Record<CountryCode, React.ReactElement> = {
-  RO: (
-    <svg viewBox="0 0 3 2" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-      <rect x="0" width="1" height="2" fill="#002B7F" />
-      <rect x="1" width="1" height="2" fill="#FCD116" />
-      <rect x="2" width="1" height="2" fill="#CE1126" />
-    </svg>
-  ),
-  MD: (
-    <svg viewBox="0 0 3 2" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-      <rect x="0" width="1" height="2" fill="#0046AE" />
-      <rect x="1" width="1" height="2" fill="#FFD200" />
-      <rect x="2" width="1" height="2" fill="#CC092F" />
-    </svg>
-  ),
-  GB: (
-    <svg viewBox="0 0 60 40" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-      <rect width="60" height="40" fill="#012169" />
-      <path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" strokeWidth="8" />
-      <path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" strokeWidth="4" />
-      <path d="M30,0 v40 M0,20 h60" stroke="#fff" strokeWidth="12" />
-      <path d="M30,0 v40 M0,20 h60" stroke="#C8102E" strokeWidth="6" />
-    </svg>
-  ),
-  DE: (
-    <svg viewBox="0 0 3 2" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-      <rect width="3" height="0.667" y="0" fill="#000" />
-      <rect width="3" height="0.667" y="0.667" fill="#DD0000" />
-      <rect width="3" height="0.667" y="1.333" fill="#FFCE00" />
-    </svg>
-  ),
-  FR: (
-    <svg viewBox="0 0 3 2" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-      <rect x="0" width="1" height="2" fill="#0055A4" />
-      <rect x="1" width="1" height="2" fill="#fff" />
-      <rect x="2" width="1" height="2" fill="#EF4135" />
-    </svg>
-  ),
-  IT: (
-    <svg viewBox="0 0 3 2" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-      <rect x="0" width="1" height="2" fill="#009246" />
-      <rect x="1" width="1" height="2" fill="#fff" />
-      <rect x="2" width="1" height="2" fill="#CE2B37" />
-    </svg>
-  ),
-  ES: (
-    <svg viewBox="0 0 3 2" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-      <rect width="3" height="0.5" y="0" fill="#AA151B" />
-      <rect width="3" height="1" y="0.5" fill="#F1BF00" />
-      <rect width="3" height="0.5" y="1.5" fill="#AA151B" />
-    </svg>
-  ),
-  US: (
-    <svg viewBox="0 0 19 10" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-      <rect width="19" height="10" fill="#B22234" />
-      <rect y="0.77" width="19" height="0.77" fill="#fff" />
-      <rect y="2.31" width="19" height="0.77" fill="#fff" />
-      <rect y="3.85" width="19" height="0.77" fill="#fff" />
-      <rect y="5.38" width="19" height="0.77" fill="#fff" />
-      <rect y="6.92" width="19" height="0.77" fill="#fff" />
-      <rect y="8.46" width="19" height="0.77" fill="#fff" />
-      <rect width="7.6" height="5.38" fill="#3C3B6E" />
-    </svg>
-  ),
-};
-
 export function Formular() {
   const [submitted, setSubmitted] = useState(false);
-  const [country, setCountry] = useState<Country>(COUNTRIES[0]);
+  const [country, setCountry] = useState<Country>(DEFAULT_COUNTRY);
   const [countryOpen, setCountryOpen] = useState(false);
+  const [countryQuery, setCountryQuery] = useState("");
+
+  const filteredCountries = useMemo(() => {
+    const raw = countryQuery.trim();
+    if (!raw) return COUNTRIES;
+    const q = normalizeForSearch(raw);
+    const digits = raw.replace(/\D/g, "");
+    return COUNTRIES.filter((c) => {
+      if (normalizeForSearch(c.name).includes(q)) return true;
+      if (digits && c.dial.replace("+", "").startsWith(digits)) return true;
+      return false;
+    });
+  }, [countryQuery]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -172,10 +119,33 @@ export function Formular() {
       fullName: "",
       email: "",
       phoneNumber: "",
+      livesInIasi: undefined as unknown as "da",
+      country: "RO",
+      city: "Iași",
       roles: [],
       termsAccepted: false as unknown as true,
     },
   });
+
+  const livesInIasi = form.watch("livesInIasi");
+  const locationEditable = livesInIasi === "nu";
+
+  useEffect(() => {
+    if (!locationEditable) {
+      form.setValue("country", "RO", { shouldValidate: false });
+      form.setValue("city", "Iași", { shouldValidate: false });
+    }
+  }, [locationEditable, form]);
+
+  const [countryFieldOpen, setCountryFieldOpen] = useState(false);
+  const [countryFieldQuery, setCountryFieldQuery] = useState("");
+
+  const filteredCountryField = useMemo(() => {
+    const raw = countryFieldQuery.trim();
+    if (!raw) return COUNTRIES;
+    const q = normalizeForSearch(raw);
+    return COUNTRIES.filter((c) => normalizeForSearch(c.name).includes(q));
+  }, [countryFieldQuery]);
 
   async function onSubmit(values: FormValues) {
     const phone = `${country.dial}${values.phoneNumber.replace(/[\s-]/g, "")}`;
@@ -183,6 +153,9 @@ export function Formular() {
       fullName: values.fullName,
       email: values.email,
       phone,
+      livesInIasi: values.livesInIasi,
+      country: values.country,
+      city: values.city,
       roles: values.roles,
       termsAccepted: values.termsAccepted,
     };
@@ -337,7 +310,10 @@ export function Formular() {
                             <div className="relative">
                               <Popover
                                 open={countryOpen}
-                                onOpenChange={setCountryOpen}
+                                onOpenChange={(open) => {
+                                  setCountryOpen(open);
+                                  if (!open) setCountryQuery("");
+                                }}
                               >
                                 <PopoverTrigger
                                   aria-label="Selectează prefixul țării"
@@ -351,41 +327,66 @@ export function Formular() {
                                 </PopoverTrigger>
                                 <PopoverContent
                                   align="start"
-                                  className="w-64 gap-0 p-1"
+                                  className="w-80 gap-0 p-1"
                                 >
+                                  <div className="relative p-1">
+                                    <MagnifyingGlass
+                                      size={14}
+                                      weight="regular"
+                                      aria-hidden
+                                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/50"
+                                    />
+                                    <Input
+                                      type="search"
+                                      placeholder="Caută țară sau prefix..."
+                                      value={countryQuery}
+                                      onChange={(e) =>
+                                        setCountryQuery(e.target.value)
+                                      }
+                                      className="h-8 pl-8 text-sm"
+                                      aria-label="Caută prefix internațional"
+                                    />
+                                  </div>
                                   <ul
                                     role="listbox"
                                     aria-label="Prefixe internaționale"
-                                    className="flex flex-col"
+                                    className="mt-1 flex max-h-64 flex-col overflow-y-auto"
                                   >
-                                    {COUNTRIES.map((c) => (
-                                      <li key={c.code}>
-                                        <button
-                                          type="button"
-                                          role="option"
-                                          aria-selected={
-                                            c.code === country.code
-                                          }
-                                          onClick={() => {
-                                            setCountry(c);
-                                            setCountryOpen(false);
-                                          }}
-                                          className={cn(
-                                            "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-foreground outline-none hover:bg-muted focus-visible:bg-muted",
-                                            c.code === country.code &&
-                                              "bg-muted",
-                                          )}
-                                        >
-                                          <Flag code={c.code} />
-                                          <span className="flex-1 text-left">
-                                            {c.name}
-                                          </span>
-                                          <span className="tabular-nums text-muted-foreground">
-                                            {c.dial}
-                                          </span>
-                                        </button>
+                                    {filteredCountries.length === 0 ? (
+                                      <li className="px-3 py-4 text-center text-sm text-muted-foreground">
+                                        Niciun rezultat
                                       </li>
-                                    ))}
+                                    ) : (
+                                      filteredCountries.map((c) => (
+                                        <li key={c.code}>
+                                          <button
+                                            type="button"
+                                            role="option"
+                                            aria-selected={
+                                              c.code === country.code
+                                            }
+                                            onClick={() => {
+                                              setCountry(c);
+                                              setCountryOpen(false);
+                                              setCountryQuery("");
+                                            }}
+                                            className={cn(
+                                              "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-foreground outline-none hover:bg-muted focus-visible:bg-muted",
+                                              c.code === country.code &&
+                                                "bg-muted",
+                                            )}
+                                          >
+                                            <Flag code={c.code} />
+                                            <span className="flex-1 truncate text-left">
+                                              {c.name}
+                                            </span>
+                                            <span className="tabular-nums text-muted-foreground">
+                                              {c.dial}
+                                            </span>
+                                          </button>
+                                        </li>
+                                      ))
+                                    )}
                                   </ul>
                                 </PopoverContent>
                               </Popover>
@@ -403,6 +404,166 @@ export function Formular() {
                         </FormItem>
                       )}
                     />
+
+                    <FormField
+                      control={form.control}
+                      name="livesInIasi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base font-normal text-foreground">
+                            Locuiești în Iași?
+                          </FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              value={field.value}
+                              onValueChange={(v) => field.onChange(v)}
+                              className="mt-2 flex flex-row gap-6"
+                            >
+                              <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground">
+                                <RadioGroupItem value="da" />
+                                Da
+                              </label>
+                              <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground">
+                                <RadioGroupItem value="nu" />
+                                Nu
+                              </label>
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name="country"
+                        render={({ field }) => {
+                          const selected =
+                            COUNTRIES.find((c) => c.code === field.value) ??
+                            DEFAULT_COUNTRY;
+                          return (
+                            <FormItem>
+                              <FormLabel className="text-sm font-normal text-muted-foreground">
+                                Țară
+                              </FormLabel>
+                              <FormControl>
+                                <Popover
+                                  open={countryFieldOpen && locationEditable}
+                                  onOpenChange={(open) => {
+                                    if (!locationEditable) return;
+                                    setCountryFieldOpen(open);
+                                    if (!open) setCountryFieldQuery("");
+                                  }}
+                                >
+                                  <PopoverTrigger
+                                    disabled={!locationEditable}
+                                    className={cn(
+                                      "flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-brand-blue-50 bg-primary px-2.5 text-sm text-primary-foreground outline-none transition-colors focus-visible:border-brand-blue focus-visible:ring-3 focus-visible:ring-brand-blue-50 disabled:cursor-not-allowed disabled:opacity-60",
+                                    )}
+                                  >
+                                    <span className="flex min-w-0 items-center gap-2">
+                                      <Flag code={selected.code} />
+                                      <span className="truncate">
+                                        {selected.name}
+                                      </span>
+                                    </span>
+                                    <CaretDown
+                                      size={14}
+                                      weight="regular"
+                                      className="shrink-0 opacity-60"
+                                    />
+                                  </PopoverTrigger>
+                                  <PopoverContent
+                                    align="start"
+                                    className="w-80 gap-0 p-1"
+                                  >
+                                    <div className="relative p-1">
+                                      <MagnifyingGlass
+                                        size={14}
+                                        weight="regular"
+                                        aria-hidden
+                                        className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/50"
+                                      />
+                                      <Input
+                                        type="search"
+                                        placeholder="Caută țară..."
+                                        value={countryFieldQuery}
+                                        onChange={(e) =>
+                                          setCountryFieldQuery(e.target.value)
+                                        }
+                                        className="h-8 pl-8 text-sm"
+                                        aria-label="Caută țară"
+                                      />
+                                    </div>
+                                    <ul
+                                      role="listbox"
+                                      aria-label="Țări"
+                                      className="mt-1 flex max-h-64 flex-col overflow-y-auto"
+                                    >
+                                      {filteredCountryField.length === 0 ? (
+                                        <li className="px-3 py-4 text-center text-sm text-muted-foreground">
+                                          Niciun rezultat
+                                        </li>
+                                      ) : (
+                                        filteredCountryField.map((c) => (
+                                          <li key={c.code}>
+                                            <button
+                                              type="button"
+                                              role="option"
+                                              aria-selected={
+                                                c.code === field.value
+                                              }
+                                              onClick={() => {
+                                                field.onChange(c.code);
+                                                setCountryFieldOpen(false);
+                                                setCountryFieldQuery("");
+                                              }}
+                                              className={cn(
+                                                "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-foreground outline-none hover:bg-muted focus-visible:bg-muted",
+                                                c.code === field.value &&
+                                                  "bg-muted",
+                                              )}
+                                            >
+                                              <Flag code={c.code} />
+                                              <span className="flex-1 truncate text-left">
+                                                {c.name}
+                                              </span>
+                                            </button>
+                                          </li>
+                                        ))
+                                      )}
+                                    </ul>
+                                  </PopoverContent>
+                                </Popover>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-normal text-muted-foreground">
+                              Oraș
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                disabled={!locationEditable}
+                                placeholder="Iași"
+                                autoComplete="address-level2"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
                     <FormField
                       control={form.control}
@@ -494,14 +655,16 @@ export function Formular() {
                 </div>
 
                 <div className="flex flex-col-reverse gap-3 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
-                  <a
-                    href="/statut-for-iasi.pdf"
-                    download
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-border bg-card px-6 text-base font-medium text-foreground shadow-xs transition-[background-color,transform] duration-150 ease-out hover:bg-muted/40 active:scale-[0.98]"
+                  <button
+                    type="button"
+                    disabled
+                    aria-label="Statut For Iași — indisponibil momentan"
+                    title="Statut indisponibil momentan"
+                    className="inline-flex h-11 cursor-not-allowed items-center justify-center gap-2 rounded-md border border-border bg-card px-6 text-base font-medium text-foreground opacity-60 shadow-xs"
                   >
                     <DownloadSimple size={18} weight="regular" aria-hidden />
                     Statut &ldquo;ForIași&rdquo;
-                  </a>
+                  </button>
                   <Button
                     type="submit"
                     disabled={form.formState.isSubmitting}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CaretDown, PencilSimpleLine } from "@phosphor-icons/react/dist/ssr";
+import { GoalProgress } from "@/components/GoalProgress";
 import { Reveal } from "@/components/motion/Reveal";
 import { cn } from "@/lib/utils";
 
@@ -121,13 +122,21 @@ export function Hero() {
             </Reveal>
           </div>
 
-          <Link
-            href="#misiune"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs transition-[opacity,transform] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
-          >
-            Află mai multe
-            <CaretDown size={16} weight="regular" />
-          </Link>
+          <div className="flex w-full flex-col items-center gap-8">
+            <GoalProgress
+              count={342}
+              target={1945}
+              targetLabel="Ținta simbolică"
+              goalLabel="1945 de semnături"
+            />
+            <Link
+              href="#misiune"
+              className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs transition-[opacity,transform] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
+            >
+              Află mai multe
+              <CaretDown size={16} weight="regular" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>
